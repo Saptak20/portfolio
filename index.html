@@ -46,6 +46,9 @@ a{color:inherit}
 .skip{position:fixed;top:12px;left:12px;z-index:300;background:var(--bg-2);border:1px solid var(--line-2);color:var(--text);padding:10px 16px;border-radius:10px;font-size:13px;text-decoration:none;transform:translateY(-70px);transition:transform .3s}
 .skip:focus{transform:none}
 
+/* ============ inline icon system (Lucide paths, zero network) ============ */
+.lucide{width:16px;height:16px;flex:none;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
 /* ============ background layers ============ */
 #field{position:fixed;inset:0;z-index:0;pointer-events:none}
 .aurora{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
@@ -93,11 +96,30 @@ main,footer{position:relative;z-index:2}
 
 #scrollProg{position:fixed;top:0;left:0;width:100%;height:2px;background:var(--accent);box-shadow:0 0 12px rgba(124,231,196,.6);transform:scaleX(0);transform-origin:left;z-index:90;pointer-events:none}
 #preloader{position:fixed;inset:0;z-index:200;background:var(--bg);display:grid;place-items:center}
-.pre-inner{display:flex;flex-direction:column;align-items:center;gap:26px}
+.pre-inner{display:flex;flex-direction:column;align-items:center;gap:26px;transition:opacity .35s ease-in,transform .35s ease-in}
 .pre-name{font-family:var(--mono);font-size:13px;letter-spacing:.5em;padding-left:.5em;color:var(--text-2);text-transform:uppercase}
 .pre-bar{width:190px;height:1px;background:rgba(255,255,255,.1);overflow:hidden}
 .pre-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s var(--ease)}
 .pre-status{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;color:var(--text-3)}
+#preloader.done .pre-inner{opacity:0;transform:translateY(-26px)}
+#preloader.done{transform:translateY(-100%);transition:transform .85s cubic-bezier(.85,0,.15,1) .15s}
+
+/* ============ vanilla entrance system (replaces GSAP intro, same cadence) ============ */
+.intro{transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
+.anim .intro{opacity:0;transform:translateY(var(--iy,22px))}
+.anim.intro-go .intro{opacity:1;transform:translateY(0)}
+h1 .l{transition:opacity .95s cubic-bezier(.16,1,.3,1),transform .95s cubic-bezier(.16,1,.3,1)}
+.anim h1 .l{opacity:0;transform:translateY(90px)}
+.anim.intro-go h1 .l{opacity:1;transform:none}
+.anim .float-chip{opacity:0}
+.anim.intro-go .float-chip{opacity:1}
+
+/* ============ vanilla scroll reveals (replaces GSAP/ScrollTrigger) ============ */
+[data-reveal]{transition:opacity 1.05s var(--ease),transform 1.05s var(--ease)}
+.anim [data-reveal]{opacity:0;transform:translateY(36px)}
+.anim [data-reveal].in{opacity:1;transform:none}
+.anim .k-line{transform:scaleX(0);transform-origin:left;transition:transform 1.1s var(--ease)}
+.anim [data-reveal].in .k-line{transform:scaleX(1)}
 
 /* ============ nav ============ */
 #nav{position:fixed;top:14px;left:0;right:0;z-index:70;display:flex;justify-content:center;padding:0 16px}
@@ -170,7 +192,11 @@ h1 .split.thin{font-weight:300;letter-spacing:.09em}
 @keyframes corePulse{0%{box-shadow:0 0 0 0 rgba(124,231,196,.5)}70%{box-shadow:0 0 0 24px rgba(124,231,196,0)}100%{box-shadow:0 0 0 0 transparent}}
 .core-readout{position:absolute;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--text-3);text-transform:uppercase;display:flex;align-items:center;gap:7px}
 .core-readout.tl{top:16px;left:18px}.core-readout.br{bottom:16px;right:18px}.core-readout.bl{bottom:16px;left:18px}
-.float-chip{position:absolute;z-index:2;transition:transform .3s ease-out}
+.float-chip{position:absolute;z-index:2;transition:opacity .6s var(--ease),transform .3s ease-out;transition-delay:calc(1.15s + var(--ci,0)*.09s),0s}
+.hero-visual .float-chip:nth-child(2){--ci:0}
+.hero-visual .float-chip:nth-child(3){--ci:1}
+.hero-visual .float-chip:nth-child(4){--ci:2}
+.hero-visual .float-chip:nth-child(5){--ci:3}
 .float-chip span{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--text-2);padding:7px 13px;border-radius:999px;border:1px solid var(--line);background:rgba(12,14,18,.66);backdrop-filter:blur(10px);animation:float 6s ease-in-out infinite}
 .float-chip:nth-child(3) span{animation-delay:-2s;animation-duration:7s}
 .float-chip:nth-child(4) span{animation-delay:-4s;animation-duration:5.4s}
@@ -402,6 +428,11 @@ h1 .split.thin{font-weight:300;letter-spacing:.09em}
 .ct-iss{font-family:var(--mono);font-size:10.5px;color:var(--text-3);letter-spacing:.08em;margin-top:2px}
 .ct-yr{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--text-3);letter-spacing:.12em}
 .ct-low{margin-top:12px;font-family:var(--mono);font-size:10.5px;color:var(--text-3)}
+a.ct-row{text-decoration:none}
+a.ct-row .ct-name{transition:color .25s}
+a.ct-row>svg{width:13px;height:13px;color:var(--text-3);flex:none;transition:color .25s,transform .25s}
+a.ct-row:hover>svg{color:var(--accent);transform:translate(2px,-2px)}
+a.ct-row:hover .ct-name{color:var(--accent)}
 
 /* ============ ask saptak ai ============ */
 .ai-grid{display:grid;grid-template-columns:5fr 7fr;gap:56px;align-items:start}
@@ -560,6 +591,41 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
 </head>
 <body>
 
+<!-- Inline icon sprite (Lucide path data) — icons render with zero network dependency -->
+<svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><line x1="4" x2="20" y1="6" y2="6"/><line x1="4" x2="20" y1="12" y2="12"/><line x1="4" x2="20" y1="18" y2="18"/></symbol>
+  <symbol id="i-x" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></symbol>
+  <symbol id="i-arrow-right" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></symbol>
+  <symbol id="i-arrow-up-right" viewBox="0 0 24 24"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></symbol>
+  <symbol id="i-github" viewBox="0 0 24 24"><path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4"/><path d="M9 18c-4.51 2-5-2-7-2"/></symbol>
+  <symbol id="i-linkedin" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></symbol>
+  <symbol id="i-mail" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></symbol>
+  <symbol id="i-map-pin" viewBox="0 0 24 24"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"/><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></symbol>
+  <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 2A2.5 2.5 0 0 1 12 4.5v15a2.5 2.5 0 0 1-4.96.44 2.5 2.5 0 0 1-2.96-3.08 3 3 0 0 1-.34-5.58 2.5 2.5 0 0 1 1.32-4.24 2.5 2.5 0 0 1 1.98-3A2.5 2.5 0 0 1 9.5 2Z"/><path d="M14.5 2A2.5 2.5 0 0 0 12 4.5v15a2.5 2.5 0 0 0 4.96.44 2.5 2.5 0 0 0 2.96-3.08 3 3 0 0 0 .34-5.58 2.5 2.5 0 0 0-1.32-4.24 2.5 2.5 0 0 0-1.98-3A2.5 2.5 0 0 0 14.5 2Z"/></symbol>
+  <symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></symbol>
+  <symbol id="i-server" viewBox="0 0 24 24"><rect width="20" height="8" x="2" y="2" rx="2" ry="2"/><rect width="20" height="8" x="2" y="14" rx="2" ry="2"/><line x1="6" x2="6.01" y1="6" y2="6"/><line x1="6" x2="6.01" y1="18" y2="18"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></symbol>
+  <symbol id="i-code" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></symbol>
+  <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 24 24"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22"/><path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></symbol>
+  <symbol id="i-zap" viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol>
+  <symbol id="i-award" viewBox="0 0 24 24"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></symbol>
+  <symbol id="i-flag" viewBox="0 0 24 24"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" x2="4" y1="22" y2="15"/></symbol>
+  <symbol id="i-graduation-cap" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></symbol>
+  <symbol id="i-sparkles" viewBox="0 0 24 24"><path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/><path d="M20 3v4"/><path d="M22 5h-4"/><path d="M4 17v2"/><path d="M5 18H3"/></symbol>
+  <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M15 2v2"/><path d="M15 20v2"/><path d="M2 15h2"/><path d="M2 9h2"/><path d="M20 15h2"/><path d="M20 9h2"/><path d="M9 2v2"/><path d="M9 20v2"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol>
+  <symbol id="i-message-square" viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></symbol>
+  <symbol id="i-workflow" viewBox="0 0 24 24"><rect width="8" height="8" x="3" y="3" rx="2"/><path d="M7 11v4a2 2 0 0 0 2 2h4"/><rect width="8" height="8" x="13" y="13" rx="2"/></symbol>
+  <symbol id="i-bot" viewBox="0 0 24 24"><path d="M12 8V4H8"/><rect width="16" height="12" x="4" y="8" rx="2"/><path d="M2 14h2"/><path d="M20 14h2"/><path d="M15 13v2"/><path d="M9 13v2"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></symbol>
+  <symbol id="i-rotate-ccw" viewBox="0 0 24 24"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></symbol>
+  <symbol id="i-shield" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></symbol>
+</svg>
+
 <a class="skip" href="#main">Skip to content</a>
 
 <div class="aurora" aria-hidden="true">
@@ -575,8 +641,25 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
     <div class="pre-status">booting environment</div>
   </div>
 </div>
+<script>
+/* Preloader failsafe — fully independent of the CDN scripts and the main script.
+   Registers before any external dependency is requested. Reveals the page on
+   runtime script errors (target === window) and after an absolute 6s limit.
+   Resource-load failures (e.g. rejected certificates) are deliberately NOT
+   fatal: they no longer abort the boot animation. */
+(function(){
+  function reveal(){
+    var p=document.getElementById('preloader');
+    if(p&&p.parentNode)p.parentNode.removeChild(p);
+    var h=document.documentElement;
+    if(h.classList)h.classList.add('intro-go');
+  }
+  window.addEventListener('error',function(e){if(e&&e.target===window)reveal();},true);
+  setTimeout(reveal,6000);
+})();
+</script>
 
-<nav id="nav" aria-label="Primary">
+<nav id="nav" class="intro" style="--d:1.15s;--iy:-24px" aria-label="Primary">
   <div class="nav-inner">
     <a class="brand" href="#hero">saptak<b>.ai</b></a>
     <div class="nav-links">
@@ -588,10 +671,10 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       <a class="nav-link" href="#ask-ai">Ask AI</a>
       <a class="nav-link" href="#contact">Contact</a>
     </div>
-    <button class="nav-cta" data-resume><i data-lucide="download"></i>Resume</button>
+    <button class="nav-cta" data-resume><svg class="lucide" aria-hidden="true"><use href="#i-download"/></svg>Resume</button>
     <button id="burger" class="nav-burger" aria-label="Toggle menu">
-      <span class="ic-menu" style="line-height:0"><i data-lucide="menu"></i></span>
-      <span class="ic-x" style="line-height:0"><i data-lucide="x"></i></span>
+      <span class="ic-menu" style="line-height:0"><svg class="lucide" aria-hidden="true"><use href="#i-menu"/></svg></span>
+      <span class="ic-x" style="line-height:0"><svg class="lucide" aria-hidden="true"><use href="#i-x"/></svg></span>
     </button>
   </div>
 </nav>
@@ -605,7 +688,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
   <a href="#achievements">Achievements</a>
   <a href="#ask-ai">Ask AI</a>
   <a href="#contact">Contact</a>
-  <button class="btn btn-ghost" data-resume><i data-lucide="download"></i>Download Resume</button>
+  <button class="btn btn-ghost" data-resume><svg class="lucide" aria-hidden="true"><use href="#i-download"/></svg>Download Resume</button>
 </div>
 
 <main id="main">
@@ -615,25 +698,25 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
   <div class="container hero-flex">
     <div class="hero-grid">
       <div>
-        <div class="status-pill"><span class="dot-live"></span>Open to jobs &amp; internships + PPO · May 2027</div>
+        <div class="status-pill intro" style="--iy:18px"><span class="dot-live"></span>Open to jobs &amp; internships + PPO · May 2027</div>
         <h1><span class="split thin">Saptak</span><br><span class="split">Mondal</span></h1>
-        <div class="hero-role">AI/ML Engineer &nbsp;·&nbsp; RAG Systems &nbsp;·&nbsp; Agentic AI &nbsp;·&nbsp; Full-Stack Deployment</div>
-        <p class="hero-desc">I build <strong>production-grade RAG systems</strong> and <strong>agentic AI applications</strong> — shipping end-to-end from data pipeline to model, API and deployed UI.</p>
-        <div class="typed-wrap"><span>&gt; currently building —</span> <span id="typed"></span><span class="typed-cursor"></span></div>
-        <div class="hero-actions">
-          <a class="btn btn-solid" href="#projects"><i data-lucide="arrow-right"></i>View Projects</a>
-          <button class="btn btn-ghost" data-resume><i data-lucide="download"></i>Download Resume</button>
+        <div class="hero-role intro" style="--d:.55s;--iy:14px">AI/ML Engineer &nbsp;·&nbsp; RAG Systems &nbsp;·&nbsp; Agentic AI &nbsp;·&nbsp; Full-Stack Deployment</div>
+        <p class="hero-desc intro" style="--d:.7s;--iy:20px">I build <strong>production-grade RAG systems</strong> and <strong>agentic AI applications</strong> — shipping end-to-end from data pipeline to model, API and deployed UI.</p>
+        <div class="typed-wrap intro" style="--d:.85s;--iy:12px"><span>&gt; currently building —</span> <span id="typed"></span><span class="typed-cursor"></span></div>
+        <div class="hero-actions intro" style="--d:1s;--iy:16px">
+          <a class="btn btn-solid" href="#projects"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg>View Projects</a>
+          <button class="btn btn-ghost" data-resume><svg class="lucide" aria-hidden="true"><use href="#i-download"/></svg>Download Resume</button>
         </div>
-        <div class="hero-links">
-          <a href="https://github.com/Saptak20" target="_blank" rel="noopener noreferrer">GitHub<i data-lucide="arrow-up-right"></i></a>
-          <a href="https://www.linkedin.com/in/saptak-mondal/" target="_blank" rel="noopener noreferrer">LinkedIn<i data-lucide="arrow-up-right"></i></a>
-          <a href="mailto:saptakmondal734@gmail.com">Email<i data-lucide="arrow-up-right"></i></a>
+        <div class="hero-links intro" style="--d:1.1s;--iy:10px">
+          <a href="https://github.com/Saptak20" target="_blank" rel="noopener noreferrer">GitHub<svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+          <a href="https://www.linkedin.com/in/saptak-mondal/" target="_blank" rel="noopener noreferrer">LinkedIn<svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+          <a href="mailto:saptakmondal734@gmail.com">Email<svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
         </div>
-        <div class="hero-loc"><i data-lucide="map-pin"></i>Bankura, West Bengal · studying in Mathura, UP</div>
+        <div class="hero-loc intro" style="--d:1.2s;--iy:8px"><svg class="lucide" aria-hidden="true"><use href="#i-map-pin"/></svg>Bankura, West Bengal · studying in Mathura, UP</div>
       </div>
 
       <div class="hero-visual" data-parallax="0.45">
-        <div class="core-card glass spot" id="coreCard">
+        <div class="core-card glass spot intro" id="coreCard" style="--d:.9s;--iy:44px">
           <div class="core-glow"></div>
           <div class="core-rings">
             <div class="ring r1"></div>
@@ -652,7 +735,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       </div>
     </div>
 
-    <div class="hero-marquee" aria-hidden="true">
+    <div class="hero-marquee intro" style="--d:1.3s" aria-hidden="true">
       <div class="marquee">
         <div class="marquee-track">
           <div class="mq-group">
@@ -693,27 +776,27 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
         <div class="focus-label">Focus areas — 06</div>
         <div class="focus-index">
           <div class="focus-item" tabindex="0">
-            <span class="fi-num">01</span><span class="fi-name">RAG Systems</span><span class="fi-arrow"><i data-lucide="arrow-right"></i></span>
+            <span class="fi-num">01</span><span class="fi-name">RAG Systems</span><span class="fi-arrow"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
             <span class="fi-desc">Hybrid retrieval, reranking, grounded answers</span>
           </div>
           <div class="focus-item" tabindex="0">
-            <span class="fi-num">02</span><span class="fi-name">Agentic AI</span><span class="fi-arrow"><i data-lucide="arrow-right"></i></span>
+            <span class="fi-num">02</span><span class="fi-name">Agentic AI</span><span class="fi-arrow"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
             <span class="fi-desc">Tool use, orchestration, LLM applications</span>
           </div>
           <div class="focus-item" tabindex="0">
-            <span class="fi-num">03</span><span class="fi-name">LLM Applications</span><span class="fi-arrow"><i data-lucide="arrow-right"></i></span>
+            <span class="fi-num">03</span><span class="fi-name">LLM Applications</span><span class="fi-arrow"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
             <span class="fi-desc">Gemini &amp; Groq APIs, prompt engineering</span>
           </div>
           <div class="focus-item" tabindex="0">
-            <span class="fi-num">04</span><span class="fi-name">Hybrid Retrieval</span><span class="fi-arrow"><i data-lucide="arrow-right"></i></span>
+            <span class="fi-num">04</span><span class="fi-name">Hybrid Retrieval</span><span class="fi-arrow"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
             <span class="fi-desc">FAISS, BM25, RRF fusion, cross-encoders</span>
           </div>
           <div class="focus-item" tabindex="0">
-            <span class="fi-num">05</span><span class="fi-name">Full-Stack AI Deployment</span><span class="fi-arrow"><i data-lucide="arrow-right"></i></span>
+            <span class="fi-num">05</span><span class="fi-name">Full-Stack AI Deployment</span><span class="fi-arrow"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
             <span class="fi-desc">Next.js + FastAPI + Docker + CI/CD</span>
           </div>
           <div class="focus-item" tabindex="0">
-            <span class="fi-num">06</span><span class="fi-name">Computer Vision</span><span class="fi-arrow"><i data-lucide="arrow-right"></i></span>
+            <span class="fi-num">06</span><span class="fi-name">Computer Vision</span><span class="fi-arrow"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg></span>
             <span class="fi-desc">Detection, liveness, anti-spoofing</span>
           </div>
         </div>
@@ -736,7 +819,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       <!-- FinDoc-RAG -->
       <article class="project glass spot" data-reveal
         data-title="FinDoc-RAG" data-cat="RAG · Hybrid Retrieval · Production"
-        data-gh="https://github.com/Saptak20/findoc-rag"
+        data-gh="https://github.com/Saptak20/FinDoc-RAG"
         data-overview="FinDoc-RAG is what production-grade RAG looks like in practice: dense FAISS retrieval and sparse BM25 run in parallel, candidates fuse through Reciprocal Rank Fusion, a cross-encoder reranks the survivors, and the answer ships with page-level citations. Behind the glass — Dockerized FastAPI + React, security middleware with rate limiting, health and readiness probes, 34+ backend tests, and retrieval-performance telemetry so regressions surface before users do."
         data-highlights="Hybrid retrieval — FAISS dense + BM25 sparse + Reciprocal Rank Fusion|Cross-encoder reranking over fused candidates|Page-level source citations on every answer|API security middleware, rate limiting & health checks|34+ backend tests + retrieval-performance telemetry|Dockerized deployment — FastAPI, React, PostgreSQL">
         <span class="p-idx">01</span>
@@ -769,15 +852,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
           <h3>FinDoc-RAG</h3>
           <p class="p-desc">Production-grade financial document intelligence — dense + sparse retrieval fused with RRF, cross-encoder reranking, and page-level citations. Dockerized, secured, tested and monitored.</p>
           <ul class="p-specs">
-            <li><i data-lucide="check"></i>Hybrid retrieval — FAISS + BM25 fused with RRF</li>
-            <li><i data-lucide="check"></i>Cross-encoder reranking, page-level citations</li>
-            <li><i data-lucide="check"></i>Security middleware, rate limiting, health checks</li>
-            <li><i data-lucide="check"></i>Dockerized · 34+ backend tests · retrieval telemetry</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Hybrid retrieval — FAISS + BM25 fused with RRF</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Cross-encoder reranking, page-level citations</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Security middleware, rate limiting, health checks</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Dockerized · 34+ backend tests · retrieval telemetry</li>
           </ul>
           <div class="p-tags"><span class="chip primary">Python</span><span class="chip">FastAPI</span><span class="chip">React</span><span class="chip">TypeScript</span><span class="chip">PostgreSQL</span><span class="chip">FAISS</span><span class="chip">BM25</span><span class="chip">Docker</span></div>
           <div class="p-actions">
-            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/findoc-rag" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>GitHub</a>
-            <button class="btn btn-ghost btn-sm demo-btn"><i data-lucide="arrow-up-right"></i>Live Demo</button>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/FinDoc-RAG" target="_blank" rel="noopener noreferrer"><svg class="lucide" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+            <button class="btn btn-ghost btn-sm demo-btn"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>Live Demo</button>
           </div>
         </div>
       </article>
@@ -785,7 +868,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       <!-- Agentic RAG -->
       <article class="project rev glass spot" data-reveal
         data-title="Agentic RAG" data-cat="Agentic AI · LLM Apps · Full-Stack"
-        data-gh="https://github.com/Saptak20/agentic-rag"
+        data-gh="https://github.com/Saptak20/Agentic_RAG"
         data-overview="Agentic RAG turns your own documents into a grounded knowledge base. Upload PDF, TXT or CSV — the pipeline extracts, chunks and embeds into ChromaDB; semantic retrieval feeds Gemini generation; and every answer is source-grounded with citations. The UI makes the machine legible: a reasoning timeline, retrieved-context visualization, and Markdown/LaTeX rendering — deployed live on Vercel + Render."
         data-highlights="Multi-format ingestion — PDF / TXT / CSV|Pipeline: extraction → chunking → embedding → ChromaDB|Semantic retrieval feeding Gemini generation|Source-grounded answers with citations|Reasoning timeline + retrieved-context visualization|Deployed on Vercel + Render">
         <span class="p-idx">02</span>
@@ -795,7 +878,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
             <div class="ar-body">
               <div class="ar-files">
                 <span class="ar-file">report.pdf</span><span class="ar-file">data.csv</span><span class="ar-file">notes.txt</span>
-                <i data-lucide="arrow-right"></i>
+                <svg class="lucide" aria-hidden="true"><use href="#i-arrow-right"/></svg>
               </div>
               <div class="ar-pipe">
                 <span class="pipe-stage">extract</span><i class="p-link"></i>
@@ -808,7 +891,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
                 <div class="rs-step"><span class="rs-t">1.1s</span><span>ranked · top-3 context assembled</span></div>
                 <div class="rs-step"><span class="rs-t">2.3s</span><span>gemini · grounded answer + citations</span></div>
               </div>
-              <div class="ar-verdict"><i data-lucide="check"></i>grounded in 3 sources · markdown + latex rendered</div>
+              <div class="ar-verdict"><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>grounded in 3 sources · markdown + latex rendered</div>
             </div>
             <div class="mock-foot"><span>chromadb · 6 passages</span><span>deployed · vercel + render</span><span class="mf-live"><span class="dot-live"></span>grounding</span></div>
           </div>
@@ -818,15 +901,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
           <h3>Agentic RAG</h3>
           <p class="p-desc">An AI-powered document intelligence platform — upload PDF, TXT or CSV and get source-grounded answers, with the whole reasoning made visible: timeline, retrieved context, citations.</p>
           <ul class="p-specs">
-            <li><i data-lucide="check"></i>PDF / TXT / CSV → chunk → embed → ChromaDB</li>
-            <li><i data-lucide="check"></i>Semantic retrieval feeding Gemini generation</li>
-            <li><i data-lucide="check"></i>Reasoning timeline + retrieved-context view</li>
-            <li><i data-lucide="check"></i>Deployed on Vercel + Render</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>PDF / TXT / CSV → chunk → embed → ChromaDB</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Semantic retrieval feeding Gemini generation</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Reasoning timeline + retrieved-context view</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Deployed on Vercel + Render</li>
           </ul>
           <div class="p-tags"><span class="chip primary">Next.js</span><span class="chip">FastAPI</span><span class="chip">Gemini API</span><span class="chip">ChromaDB</span><span class="chip">TypeScript</span><span class="chip">Python</span></div>
           <div class="p-actions">
-            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/agentic-rag" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>GitHub</a>
-            <button class="btn btn-ghost btn-sm demo-btn"><i data-lucide="arrow-up-right"></i>Live Demo</button>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/Agentic_RAG" target="_blank" rel="noopener noreferrer"><svg class="lucide" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+            <button class="btn btn-ghost btn-sm demo-btn"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>Live Demo</button>
           </div>
         </div>
       </article>
@@ -834,7 +917,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       <!-- Collaborative Task Manager -->
       <article class="project glass spot" data-reveal
         data-title="Collaborative Task Manager" data-cat="Full-Stack · Real-Time · Cloud"
-        data-gh="https://github.com/Saptak20/task-manager"
+        data-gh="https://github.com/Saptak20/Cloud-Based-Collaborative-Task-Manager"
         data-overview="A cloud-based task manager built for real coordination, not CRUD. Team workspaces with assignment and priority tracking; live activity feeds powered by Socket.IO room broadcasting; JWT auth across 10+ REST endpoints; PostgreSQL with SQL migrations. The CI pipeline provisions the database, runs migrations and builds frontend + API on every push — deployed on Render via render.yaml."
         data-highlights="Team workspaces — assignment & priority tracking|Live activity feeds via Socket.IO room broadcasting|JWT authentication + 10+ REST endpoints|PostgreSQL with SQL migrations|CI: provisions DB, runs migrations, builds FE + API on every push|Deployed on Render via render.yaml">
         <span class="p-idx">03</span>
@@ -863,15 +946,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
           <h3>Task Manager</h3>
           <p class="p-desc">A cloud-based collaborative task manager with real-time coordination — live activity feeds via Socket.IO room broadcasting, JWT auth, and a CI pipeline that provisions PostgreSQL and runs migrations on every push.</p>
           <ul class="p-specs">
-            <li><i data-lucide="check"></i>Team workspaces · assignment &amp; priorities</li>
-            <li><i data-lucide="check"></i>Live activity feeds — Socket.IO rooms</li>
-            <li><i data-lucide="check"></i>JWT auth + 10+ REST endpoints</li>
-            <li><i data-lucide="check"></i>CI: provisions DB &amp; runs migrations per push</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Team workspaces · assignment &amp; priorities</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Live activity feeds — Socket.IO rooms</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>JWT auth + 10+ REST endpoints</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>CI: provisions DB &amp; runs migrations per push</li>
           </ul>
           <div class="p-tags"><span class="chip primary">Next.js</span><span class="chip">Express</span><span class="chip">Socket.IO</span><span class="chip">PostgreSQL</span><span class="chip">AWS</span></div>
           <div class="p-actions">
-            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/task-manager" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>GitHub</a>
-            <button class="btn btn-ghost btn-sm demo-btn"><i data-lucide="arrow-up-right"></i>Live Demo</button>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/Cloud-Based-Collaborative-Task-Manager" target="_blank" rel="noopener noreferrer"><svg class="lucide" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+            <button class="btn btn-ghost btn-sm demo-btn"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>Live Demo</button>
           </div>
         </div>
       </article>
@@ -879,7 +962,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       <!-- Face Recognition + Anti-Spoofing -->
       <article class="project rev glass spot" data-reveal
         data-title="Face Anti-Spoofing" data-cat="Computer Vision · Security"
-        data-gh="https://github.com/Saptak20/face-antispoofing"
+        data-gh="https://github.com/Saptak20/Face-Recognition-with-Anti-Spoofing"
         data-overview="Face recognition with an honest threat model: attackers present photos and screens, so the pipeline checks liveness first. Detection and recognition run in the usual order — but a spoof never reaches the recognizer. The pipeline is designed around FAR/FRR trade-offs, because a biometric system is only as good as its false-accept rate."
         data-highlights="Face detection + recognition pipeline|Liveness detection rejects photos & screen replays|Designed around FAR / FRR trade-offs|Real-time inference with OpenCV">
         <span class="p-idx">04</span>
@@ -894,7 +977,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
               </div>
               <div class="fr-side">
                 <div class="fr-verdict js-verdict pass">
-                  <span class="fv-ic"><span class="ic-check"><i data-lucide="check"></i></span><span class="ic-x"><i data-lucide="x"></i></span></span>
+                  <span class="fv-ic"><span class="ic-check"><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg></span><span class="ic-x"><svg class="lucide" aria-hidden="true"><use href="#i-x"/></svg></span></span>
                   <span class="js-vtext">liveness · passed</span>
                 </div>
                 <div class="fr-metrics">
@@ -913,15 +996,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
           <h3>Face Anti-Spoofing</h3>
           <p class="p-desc">A face recognition pipeline hardened against presentation attacks — liveness detection rejects printed photos and screen replays before recognition ever runs. Designed around FAR/FRR trade-offs, not just accuracy.</p>
           <ul class="p-specs">
-            <li><i data-lucide="check"></i>Face detection + recognition pipeline</li>
-            <li><i data-lucide="check"></i>Liveness detection rejects photos &amp; screens</li>
-            <li><i data-lucide="check"></i>Designed around FAR / FRR trade-offs</li>
-            <li><i data-lucide="check"></i>Real-time OpenCV inference</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Face detection + recognition pipeline</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Liveness detection rejects photos &amp; screens</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Designed around FAR / FRR trade-offs</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Real-time OpenCV inference</li>
           </ul>
           <div class="p-tags"><span class="chip primary">Python</span><span class="chip">OpenCV</span><span class="chip">PyTorch</span><span class="chip">Computer Vision</span></div>
           <div class="p-actions">
-            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/face-antispoofing" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>GitHub</a>
-            <button class="btn btn-ghost btn-sm demo-btn"><i data-lucide="arrow-up-right"></i>Live Demo</button>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/Face-Recognition-with-Anti-Spoofing" target="_blank" rel="noopener noreferrer"><svg class="lucide" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+            <button class="btn btn-ghost btn-sm demo-btn"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>Live Demo</button>
           </div>
         </div>
       </article>
@@ -929,7 +1012,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       <!-- Privacy-First Forensic AI -->
       <article class="project glass spot" data-reveal
         data-title="Privacy-First Forensics" data-cat="Privacy-First AI · On-Device"
-        data-gh="https://github.com/Saptak20/forensic-ai"
+        data-gh="https://github.com/Saptak20/Privacy-First-AI-System-for-Evidence-based-Forensic-Document-Analysis"
         data-overview="A forensic analysis system where the architecture is the privacy policy: all inference runs on-device, evidence files never leave the machine, and zero network egress is enforced by design. Every processing step preserves chain-of-custody, so findings stay auditable and defensible."
         data-highlights="On-device, privacy-preserving inference|Zero network egress — enforced by design|Chain-of-custody integrity across the pipeline|Local, auditable processing">
         <span class="p-idx">05</span>
@@ -943,7 +1026,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
               <div class="fo-line ok">✓ network blocked · 0 bytes sent</div>
               <div class="fo-line dim">$ <span class="js-fo"></span><span class="fo-caret"></span></div>
             </div>
-            <div class="mock-foot"><span><i data-lucide="shield"></i>on-device</span><span>custody · intact</span><span class="mf-live"><span class="dot-live"></span>air-gapped</span></div>
+            <div class="mock-foot"><span><svg class="lucide" aria-hidden="true"><use href="#i-shield"/></svg>on-device</span><span>custody · intact</span><span class="mf-live"><span class="dot-live"></span>air-gapped</span></div>
           </div>
         </div>
         <div class="p-content">
@@ -951,15 +1034,15 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
           <h3>Privacy-First Forensics</h3>
           <p class="p-desc">Evidence-based forensic analysis built privacy-first: all inference runs on-device, evidence never leaves the machine, and chain-of-custody is preserved end-to-end. The architecture is the feature — zero network egress by design.</p>
           <ul class="p-specs">
-            <li><i data-lucide="check"></i>On-device inference — nothing leaves the machine</li>
-            <li><i data-lucide="check"></i>Zero network egress by design</li>
-            <li><i data-lucide="check"></i>Chain-of-custody preserved end-to-end</li>
-            <li><i data-lucide="check"></i>Local, auditable processing</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>On-device inference — nothing leaves the machine</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Zero network egress by design</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Chain-of-custody preserved end-to-end</li>
+            <li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg>Local, auditable processing</li>
           </ul>
           <div class="p-tags"><span class="chip primary">Python</span><span class="chip">On-Device Inference</span><span class="chip">Privacy</span><span class="chip">Computer Vision</span></div>
           <div class="p-actions">
-            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/forensic-ai" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>GitHub</a>
-            <button class="btn btn-ghost btn-sm demo-btn"><i data-lucide="arrow-up-right"></i>Live Demo</button>
+            <a class="btn btn-ghost btn-sm" href="https://github.com/Saptak20/Privacy-First-AI-System-for-Evidence-based-Forensic-Document-Analysis" target="_blank" rel="noopener noreferrer"><svg class="lucide" aria-hidden="true"><use href="#i-github"/></svg>GitHub</a>
+            <button class="btn btn-ghost btn-sm demo-btn"><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>Live Demo</button>
           </div>
         </div>
       </article>
@@ -1046,27 +1129,27 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
     </div>
     <div class="skills-grid">
       <div class="skill-panel span-7 glass spot" data-reveal>
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="brain"></i></span><div><h3>AI / ML</h3><span class="sp-count">11 modules · core</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-brain"/></svg></span><div><h3>AI / ML</h3><span class="sp-count">11 modules · core</span></div></div>
         <div class="sp-chips"><span class="chip primary">Gen AI</span><span class="chip primary">RAG</span><span class="chip primary">Agentic AI</span><span class="chip">LangChain</span><span class="chip">LangGraph</span><span class="chip">HuggingFace</span><span class="chip">Scikit-learn</span><span class="chip">TensorFlow</span><span class="chip">NumPy</span><span class="chip">Pandas</span><span class="chip">Matplotlib</span></div>
       </div>
       <div class="skill-panel span-5 glass spot" data-reveal data-delay="0.08">
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="database"></i></span><div><h3>LLM &amp; Vector</h3><span class="sp-count">07 modules</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-database"/></svg></span><div><h3>LLM &amp; Vector</h3><span class="sp-count">07 modules</span></div></div>
         <div class="sp-chips"><span class="chip primary">Gemini API</span><span class="chip">Groq API</span><span class="chip">Prompt Engineering</span><span class="chip">Embeddings</span><span class="chip">FAISS</span><span class="chip">ChromaDB</span><span class="chip primary">BM25 · RRF · Rerank</span></div>
       </div>
       <div class="skill-panel span-5 glass spot" data-reveal>
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="server"></i></span><div><h3>Backend</h3><span class="sp-count">07 modules</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-server"/></svg></span><div><h3>Backend</h3><span class="sp-count">07 modules</span></div></div>
         <div class="sp-chips"><span class="chip primary">FastAPI</span><span class="chip">Express</span><span class="chip">REST APIs</span><span class="chip">JWT Auth</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">Socket.IO</span></div>
       </div>
       <div class="skill-panel span-7 glass spot" data-reveal data-delay="0.08">
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="monitor"></i></span><div><h3>Frontend</h3><span class="sp-count">06 modules</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-monitor"/></svg></span><div><h3>Frontend</h3><span class="sp-count">06 modules</span></div></div>
         <div class="sp-chips"><span class="chip primary">React.js</span><span class="chip">Next.js</span><span class="chip">TypeScript</span><span class="chip">Tailwind CSS</span><span class="chip">HTML5</span><span class="chip">CSS3</span></div>
       </div>
       <div class="skill-panel span-5 glass spot" data-reveal>
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="code"></i></span><div><h3>Languages</h3><span class="sp-count">05 modules</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-code"/></svg></span><div><h3>Languages</h3><span class="sp-count">05 modules</span></div></div>
         <div class="sp-chips"><span class="chip primary">Python</span><span class="chip">Java</span><span class="chip">JavaScript</span><span class="chip">TypeScript</span><span class="chip">SQL</span></div>
       </div>
       <div class="skill-panel span-7 glass spot" data-reveal data-delay="0.08">
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="cloud"></i></span><div><h3>Cloud, DevOps &amp; Automation</h3><span class="sp-count">10 modules</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-cloud"/></svg></span><div><h3>Cloud, DevOps &amp; Automation</h3><span class="sp-count">10 modules</span></div></div>
         <div class="sp-chips"><span class="chip primary">AWS</span><span class="chip">GCP</span><span class="chip">Docker</span><span class="chip">Vercel</span><span class="chip">Render</span><span class="chip">Git</span><span class="chip">GitHub</span><span class="chip">CI/CD</span><span class="chip">n8n</span><span class="chip">Make.com</span></div>
       </div>
       <div class="skill-panel glass learn-strip spot" data-reveal>
@@ -1131,42 +1214,42 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
     </div>
     <div class="ach-grid">
       <div class="ach-panel span-7 glass spot" data-reveal>
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="trophy"></i></span><div><h3>Competition Circuit</h3><span class="sp-count">05 · hackathons</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-trophy"/></svg></span><div><h3>Competition Circuit</h3><span class="sp-count">05 · hackathons</span></div></div>
         <div class="hk-list">
-          <div class="hk-row"><i data-lucide="flag"></i><span class="hk-name">Smart India Hackathon — SIH 2026</span><span class="hk-yr">2026</span></div>
-          <div class="hk-row"><i data-lucide="flag"></i><span class="hk-name">Techkriti ML Hackathon — IIT Kanpur</span><span class="hk-yr">IIT-K</span></div>
-          <div class="hk-row"><i data-lucide="flag"></i><span class="hk-name">CodePunk — cleared selection round</span><span class="hk-yr">ADV.</span></div>
-          <div class="hk-row"><i data-lucide="flag"></i><span class="hk-name">MumbaiHacks</span><span class="hk-yr">2025</span></div>
-          <div class="hk-row"><i data-lucide="flag"></i><span class="hk-name">Hack &amp; Viz</span><span class="hk-yr">2025</span></div>
+          <div class="hk-row"><svg class="lucide" aria-hidden="true"><use href="#i-flag"/></svg><span class="hk-name">Smart India Hackathon — SIH 2026</span><span class="hk-yr">2026</span></div>
+          <div class="hk-row"><svg class="lucide" aria-hidden="true"><use href="#i-flag"/></svg><span class="hk-name">Techkriti ML Hackathon — IIT Kanpur</span><span class="hk-yr">IIT-K</span></div>
+          <div class="hk-row"><svg class="lucide" aria-hidden="true"><use href="#i-flag"/></svg><span class="hk-name">CodePunk — cleared selection round</span><span class="hk-yr">ADV.</span></div>
+          <div class="hk-row"><svg class="lucide" aria-hidden="true"><use href="#i-flag"/></svg><span class="hk-name">MumbaiHacks</span><span class="hk-yr">2025</span></div>
+          <div class="hk-row"><svg class="lucide" aria-hidden="true"><use href="#i-flag"/></svg><span class="hk-name">Hack &amp; Viz</span><span class="hk-yr">2025</span></div>
         </div>
       </div>
       <div class="ach-panel span-5 glass spot" data-reveal data-delay="0.08">
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="zap"></i></span><div><h3>Coding Profiles</h3><span class="sp-count">live · verifiable</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-zap"/></svg></span><div><h3>Coding Profiles</h3><span class="sp-count">live · verifiable</span></div></div>
         <div class="cp-rows">
-          <a class="cp-row" href="https://leetcode.com/saptakmondal" target="_blank" rel="noopener noreferrer">
+          <a class="cp-row" href="https://leetcode.com/u/saptakmondal734/" target="_blank" rel="noopener noreferrer" aria-label="View LeetCode profile — 300+ problems solved in Java">
             <span class="cp-num">300+</span>
             <span class="cp-lab"><b>LeetCode — Java</b>arrays · DP · trees · graphs · sliding window</span>
-            <i data-lucide="arrow-up-right"></i>
+            <svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
           </a>
-          <a class="cp-row" href="https://codeforces.com/profile/saptakmondal" target="_blank" rel="noopener noreferrer">
+          <a class="cp-row" href="https://codeforces.com/profile/saptakmondal734" target="_blank" rel="noopener noreferrer" aria-label="View Codeforces profile — 1200+ contest rating">
             <span class="cp-num">1200+</span>
             <span class="cp-lab"><b>Codeforces</b>contest rating · active</span>
-            <i data-lucide="arrow-up-right"></i>
+            <svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
           </a>
-          <a class="cp-row" href="https://github.com/Saptak20" target="_blank" rel="noopener noreferrer">
+          <a class="cp-row" href="https://github.com/Saptak20" target="_blank" rel="noopener noreferrer" aria-label="View GitHub profile — pinned repos and contributions">
             <span class="cp-num" style="font-size:22px;padding-top:6px">GitHub</span>
             <span class="cp-lab"><b>Open source</b>pinned repos · contributions</span>
-            <i data-lucide="arrow-up-right"></i>
+            <svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg>
           </a>
         </div>
       </div>
       <div class="cert-panel glass spot" data-reveal>
-        <div class="sp-head"><span class="sp-icon"><i data-lucide="award"></i></span><div><h3>Certifications</h3><span class="sp-count">high signal · verified</span></div></div>
+        <div class="sp-head"><span class="sp-icon"><svg class="lucide" aria-hidden="true"><use href="#i-award"/></svg></span><div><h3>Certifications</h3><span class="sp-count">high signal · verified</span></div></div>
         <div class="ct-rows">
-          <div class="ct-row"><span class="ct-icon"><i data-lucide="graduation-cap"></i></span><div><div class="ct-name">Software Engineering — NPTEL, IIT</div><div class="ct-iss">elite certification</div></div><span class="ct-yr">2024</span></div>
-          <div class="ct-row"><span class="ct-icon"><i data-lucide="sparkles"></i></span><div><div class="ct-name">Introduction to Generative AI</div><div class="ct-iss">google cloud × coursera</div></div><span class="ct-yr">DEC 2023</span></div>
-          <div class="ct-row"><span class="ct-icon"><i data-lucide="cloud"></i></span><div><div class="ct-name">AZ-900 · Microsoft Azure Fundamentals</div><div class="ct-iss">microsoft</div></div><span class="ct-yr">DEC 2025</span></div>
-          <div class="ct-row"><span class="ct-icon"><i data-lucide="cpu"></i></span><div><div class="ct-name">Machine Learning with Apache Spark 3.0</div><div class="ct-iss">scala · distributed ml</div></div><span class="ct-yr">DEC 2025</span></div>
+          <a class="ct-row" href="https://drive.google.com/file/d/1UkiRkXxWqb4SFTziQMjiRI0RR6zMIkMj/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="View Software Engineering NPTEL IIT certification on Google Drive"><span class="ct-icon"><svg class="lucide" aria-hidden="true"><use href="#i-graduation-cap"/></svg></span><div><div class="ct-name">Software Engineering — NPTEL, IIT</div><div class="ct-iss">elite certification</div></div><span class="ct-yr">2024</span><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+          <a class="ct-row" href="https://drive.google.com/file/d/1Xu_ilxaXVxlVNsyJHjGrqoKuYsqrj59O/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="View Introduction to Generative AI Google Cloud certification on Google Drive"><span class="ct-icon"><svg class="lucide" aria-hidden="true"><use href="#i-sparkles"/></svg></span><div><div class="ct-name">Introduction to Generative AI</div><div class="ct-iss">google cloud × coursera</div></div><span class="ct-yr">DEC 2023</span><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+          <a class="ct-row" href="https://drive.google.com/file/d/1ebGgQH4uMSknEJi1TwPlaDSbI-WImN_M/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="View AZ-900 Microsoft Azure Fundamentals certification on Google Drive"><span class="ct-icon"><svg class="lucide" aria-hidden="true"><use href="#i-cloud"/></svg></span><div><div class="ct-name">AZ-900 · Microsoft Azure Fundamentals</div><div class="ct-iss">microsoft</div></div><span class="ct-yr">DEC 2025</span><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
+          <a class="ct-row" href="https://drive.google.com/file/d/1cGGzj2FWj7WIOrLvHT_81ZP4Ft5vXIOc/view?usp=sharing" target="_blank" rel="noopener noreferrer" aria-label="View Machine Learning with Apache Spark 3.0 certification on Google Drive"><span class="ct-icon"><svg class="lucide" aria-hidden="true"><use href="#i-cpu"/></svg></span><div><div class="ct-name">Machine Learning with Apache Spark 3.0</div><div class="ct-iss">scala · distributed ml</div></div><span class="ct-yr">DEC 2025</span><svg class="lucide" aria-hidden="true"><use href="#i-arrow-up-right"/></svg></a>
         </div>
         <div class="ct-low">Also on record: Automated ML for Beginners (Google &amp; Apple) · Python &amp; Django Framework · Python &amp; Flask Framework</div>
       </div>
@@ -1186,25 +1269,25 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
         <p class="ai-copy">An assistant grounded in my <strong>résumé, projects and engineering notes</strong> — ask it anything you'd ask me.</p>
         <p class="ai-copy" style="margin-top:16px">This page runs a <strong>distilled, on-device version of the pipeline</strong>: your question is tokenized, matched against a local knowledge base, and answered by retrieval — zero network calls, zero hallucinated credentials. The production system swaps the local matcher for a hosted GLM model behind the same interface.</p>
         <div class="arch" aria-hidden="true">
-          <div class="arch-node"><span class="an-icon"><i data-lucide="user"></i></span><div><b>You</b><span class="an-sub">natural language</span></div></div>
+          <div class="arch-node"><span class="an-icon"><svg class="lucide" aria-hidden="true"><use href="#i-user"/></svg></span><div><b>You</b><span class="an-sub">natural language</span></div></div>
           <div class="arch-link"><i></i></div>
-          <div class="arch-node"><span class="an-icon"><i data-lucide="message-square"></i></span><div><b>Chat Interface</b><span class="an-sub">glass ui · streaming</span></div></div>
+          <div class="arch-node"><span class="an-icon"><svg class="lucide" aria-hidden="true"><use href="#i-message-square"/></svg></span><div><b>Chat Interface</b><span class="an-sub">glass ui · streaming</span></div></div>
           <div class="arch-link"><i></i></div>
-          <div class="arch-node"><span class="an-icon"><i data-lucide="server"></i></span><div><b>Backend API</b><span class="an-sub">fastapi</span></div></div>
+          <div class="arch-node"><span class="an-icon"><svg class="lucide" aria-hidden="true"><use href="#i-server"/></svg></span><div><b>Backend API</b><span class="an-sub">fastapi</span></div></div>
           <div class="arch-link"><i></i></div>
-          <div class="arch-node"><span class="an-icon"><i data-lucide="workflow"></i></span><div><b>RAG Pipeline</b><span class="an-sub">retrieve · rerank · assemble</span></div></div>
+          <div class="arch-node"><span class="an-icon"><svg class="lucide" aria-hidden="true"><use href="#i-workflow"/></svg></span><div><b>RAG Pipeline</b><span class="an-sub">retrieve · rerank · assemble</span></div></div>
           <div class="arch-link"><i></i></div>
-          <div class="arch-node"><span class="an-icon"><i data-lucide="bot"></i></span><div><b>GLM Model</b><span class="an-sub">generation</span></div></div>
+          <div class="arch-node"><span class="an-icon"><svg class="lucide" aria-hidden="true"><use href="#i-bot"/></svg></span><div><b>GLM Model</b><span class="an-sub">generation</span></div></div>
           <div class="arch-link"><i></i></div>
-          <div class="arch-node"><span class="an-icon"><i data-lucide="database"></i></span><div><b>Knowledge Base</b><span class="an-sub">résumé · projects · notes</span></div></div>
+          <div class="arch-node"><span class="an-icon"><svg class="lucide" aria-hidden="true"><use href="#i-database"/></svg></span><div><b>Knowledge Base</b><span class="an-sub">résumé · projects · notes</span></div></div>
         </div>
       </div>
 
       <div class="chat glass spot" id="chatPanel" data-reveal data-delay="0.1">
         <div class="chat-head">
-          <span class="chat-avatar"><i data-lucide="bot"></i></span>
+          <span class="chat-avatar"><svg class="lucide" aria-hidden="true"><use href="#i-bot"/></svg></span>
           <div><div class="chat-title">Saptak-AI</div><div class="chat-status"><span class="dot-live"></span>online · on-device retrieval</div></div>
-          <button class="chat-reset" id="chatReset" aria-label="Reset conversation"><i data-lucide="rotate-ccw"></i></button>
+          <button class="chat-reset" id="chatReset" aria-label="Reset conversation"><svg class="lucide" aria-hidden="true"><use href="#i-rotate-ccw"/></svg></button>
         </div>
         <div class="chat-log" id="chatLog" role="log" aria-live="polite"></div>
         <div class="chat-chips" id="chatChips">
@@ -1215,7 +1298,7 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
         </div>
         <form class="chat-input" id="chatForm">
           <input id="chatField" type="text" placeholder="Ask about projects, stack, journey…" autocomplete="off" aria-label="Ask Saptak AI">
-          <button class="chat-send" type="submit" aria-label="Send message"><i data-lucide="send"></i></button>
+          <button class="chat-send" type="submit" aria-label="Send message"><svg class="lucide" aria-hidden="true"><use href="#i-send"/></svg></button>
         </form>
       </div>
     </div>
@@ -1234,12 +1317,12 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
       <button class="email-line" id="copyEmail" aria-label="Copy email address">
         <span class="ce-label">email</span>
         <span class="ce-addr">saptakmondal734@gmail.com</span>
-        <span class="ce-ic"><span class="ic-copy"><i data-lucide="copy"></i></span><span class="ic-check"><i data-lucide="check"></i></span></span>
+        <span class="ce-ic"><span class="ic-copy" style="display:grid"><svg class="lucide" aria-hidden="true"><use href="#i-copy"/></svg></span><span class="ic-check"><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg></span></span>
       </button>
       <div class="contact-links">
-        <a class="c-link" href="https://github.com/Saptak20" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><i data-lucide="github"></i></a>
-        <a class="c-link" href="https://www.linkedin.com/in/saptak-mondal/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><i data-lucide="linkedin"></i></a>
-        <a class="c-link" href="mailto:saptakmondal734@gmail.com" aria-label="Email"><i data-lucide="mail"></i></a>
+        <a class="c-link" href="https://github.com/Saptak20" target="_blank" rel="noopener noreferrer" aria-label="GitHub"><svg class="lucide" aria-hidden="true"><use href="#i-github"/></svg></a>
+        <a class="c-link" href="https://www.linkedin.com/in/saptak-mondal/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn"><svg class="lucide" aria-hidden="true"><use href="#i-linkedin"/></svg></a>
+        <a class="c-link" href="mailto:saptakmondal734@gmail.com" aria-label="Email"><svg class="lucide" aria-hidden="true"><use href="#i-mail"/></svg></a>
       </div>
       <div class="contact-meta">
         <p class="contact-note"><b>open</b> to jobs, internships &amp; PPO — graduating <b>May 2027</b></p>
@@ -1257,22 +1340,19 @@ footer{border-top:1px solid var(--line);padding:30px 0;background:rgba(6,6,9,.6)
   </div>
 </footer>
 
-<button id="chatFab" aria-label="Open Ask Saptak AI"><i data-lucide="message-square"></i>Ask Saptak AI</button>
+<button id="chatFab" aria-label="Open Ask Saptak AI"><svg class="lucide" aria-hidden="true"><use href="#i-message-square"/></svg>Ask Saptak AI</button>
 
 <div class="modal" id="modal" role="dialog" aria-modal="true" aria-hidden="true">
   <div class="modal-backdrop" data-close></div>
   <div class="modal-panel glass">
-    <button class="modal-close" data-close aria-label="Close"><i data-lucide="x"></i></button>
+    <button class="modal-close" data-close aria-label="Close"><svg class="lucide" aria-hidden="true"><use href="#i-x"/></svg></button>
     <div id="modalBody"></div>
   </div>
 </div>
 
 <div id="toast" role="status" aria-live="polite"><span id="toastIc"></span><span id="toastTxt"></span></div>
 
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lucide@0.462.0/dist/umd/lucide.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script>
 (function(){
@@ -1282,34 +1362,29 @@ const $$=(s,c=document)=>Array.from(c.querySelectorAll(s));
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 const REDUCED=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const FINE=matchMedia('(hover:hover) and (pointer:fine)').matches;
-const HAS_GSAP=typeof gsap!=='undefined'&&typeof ScrollTrigger!=='undefined';
-if(HAS_GSAP)gsap.registerPlugin(ScrollTrigger);
-lucide.createIcons();
+const html=document.documentElement;
+const pre=$('#preloader');
+/* Entrance animation is armed only when the preloader is still present and
+   motion is allowed; the independent failsafe handles every other case. */
+if(pre&&!REDUCED)html.classList.add('anim');
 
 /* ---------- toast ---------- */
 const toastEl=$('#toast');let toastTimer=null;
 function toast(msg,icon='check'){
   if(!toastEl)return;
   $('#toastTxt').textContent=msg;
-  $('#toastIc').innerHTML='<i data-lucide="'+icon+'"></i>';
-  lucide.createIcons();
+  $('#toastIc').innerHTML='<svg class="lucide" aria-hidden="true"><use href="#i-'+icon+'"/></svg>';
   toastEl.classList.add('show');
   clearTimeout(toastTimer);
   toastTimer=setTimeout(()=>toastEl.classList.remove('show'),2600);
 }
 
-/* ---------- lenis ---------- */
+/* ---------- lenis (optional enhancement — falls back to native smooth scroll) ---------- */
 let lenis=null;
 if(typeof Lenis!=='undefined'&&!REDUCED){
   lenis=new Lenis({duration:1.15,easing:t=>Math.min(1,1.001-Math.pow(2,-10*t))});
-  if(HAS_GSAP){
-    lenis.on('scroll',ScrollTrigger.update);
-    gsap.ticker.add(t=>lenis.raf(t*1000));
-    gsap.ticker.lagSmoothing(0);
-  }else{
-    const raf=t=>{lenis.raf(t);requestAnimationFrame(raf)};
-    requestAnimationFrame(raf);
-  }
+  const raf=t=>{lenis.raf(t);requestAnimationFrame(raf)};
+  requestAnimationFrame(raf);
 }
 const scrollToEl=(el,offset=-84)=>{
   if(!el)return;
@@ -1366,43 +1441,32 @@ addEventListener('scroll',updProg,{passive:true});
 const navInner=$('.nav-inner');
 addEventListener('scroll',()=>navInner&&navInner.classList.toggle('scrolled',scrollY>40),{passive:true});
 
-/* ---------- preloader ---------- */
-const pre=$('#preloader');
-setTimeout(()=>{if(pre&&pre.parentNode)pre.remove();},5000);
+/* ---------- preloader — vanilla boot sequence, curtain lift, entrance (no GSAP) ---------- */
+setTimeout(()=>{if(pre&&pre.parentNode)pre.parentNode.removeChild(pre);},6000); /* local backstop */
 async function runPreloader(){
   if(!pre)return;
-  if(REDUCED||!HAS_GSAP){pre.remove();return;}
-  const bar=$('.pre-bar i'),status=$('.pre-status'),inner=$('.pre-inner');
+  if(REDUCED){pre.remove();return;}
+  const bar=$('.pre-bar i'),status=$('.pre-status');
   const steps=[['booting environment',34],['indexing knowledge base',71],['interface ready',100]];
   await wait(300);
   for(const[txt,w]of steps){status.textContent=txt;bar.style.width=w+'%';await wait(360);}
   await wait(200);
-  gsap.to(inner,{opacity:0,y:-26,duration:.35,ease:'power2.in'});
-  gsap.to(pre,{yPercent:-100,duration:.85,ease:'power4.inOut',delay:.15,onComplete:()=>pre.remove()});
-  gsap.delayedCall(.45,heroIntro);
+  pre.classList.add('done'); /* inner fades, then the curtain lifts (CSS transitions) */
+  setTimeout(()=>{if(pre&&pre.parentNode)pre.parentNode.removeChild(pre);},1100);
+  setTimeout(()=>{html.classList.add('intro-go');},420);
 }
 
-/* ---------- hero intro ---------- */
+/* ---------- hero letter split (stagger delays set inline) ---------- */
+let letterIdx=0;
  $$('.split').forEach(el=>{
   const txt=el.textContent;el.textContent='';
-  for(const ch of txt){const s=document.createElement('span');s.className='l';s.textContent=ch;el.appendChild(s);}
+  for(const ch of txt){
+    const s=document.createElement('span');
+    s.className='l';s.textContent=ch;
+    s.style.transitionDelay=(.25+letterIdx*.04).toFixed(2)+'s';
+    el.appendChild(s);letterIdx++;
+  }
 });
-function heroIntro(){
-  if(!HAS_GSAP||REDUCED)return;
-  const tl=gsap.timeline({defaults:{ease:'power3.out'}});
-  tl.from('.status-pill',{y:18,opacity:0,duration:.7})
-    .from('.split .l',{y:90,opacity:0,duration:.95,stagger:.04,ease:'power4.out'},'-=.45')
-    .from('.hero-role',{y:14,opacity:0,duration:.6},'-=.5')
-    .from('.hero-desc',{y:20,opacity:0,duration:.7},'-=.45')
-    .from('.typed-wrap',{opacity:0,duration:.6},'-=.4')
-    .from('.hero-actions',{y:16,opacity:0,duration:.6},'-=.35')
-    .from('.hero-links',{opacity:0,y:10,duration:.6},'-=.35')
-    .from('.hero-loc',{opacity:0,duration:.5},'-=.3')
-    .from('.core-card',{y:44,opacity:0,scale:.95,duration:1},'-=1')
-    .from('.float-chip',{scale:.5,opacity:0,duration:.6,stagger:.09,ease:'back.out(2)'},'-=.45')
-    .from('.hero-marquee',{opacity:0,duration:.9},'-=.3')
-    .from('#nav',{y:-24,opacity:0,duration:.7},'-=.9');
-}
 
 /* ---------- typing loops ---------- */
 async function typeLoop(el,phrases,speed=40){
@@ -1483,29 +1547,54 @@ if(foEl){
   start();
 })();
 
-/* ---------- scroll reveals / parallax / timeline ---------- */
-if(HAS_GSAP&&!REDUCED){
+/* ---------- vanilla scroll reveals (replaces GSAP/ScrollTrigger fromTo) ---------- */
+if(html.classList.contains('anim')){
+  const revealIO=new IntersectionObserver(es=>{
+    es.forEach(en=>{
+      if(en.isIntersecting){en.target.classList.add('in');revealIO.unobserve(en.target);}
+    });
+  },{rootMargin:'0px 0px -12% 0px'});
   $$('[data-reveal]').forEach(el=>{
-    gsap.fromTo(el,{y:36,opacity:0},{y:0,opacity:1,duration:1.05,ease:'power3.out',
-      delay:parseFloat(el.dataset.delay||0),
-      scrollTrigger:{trigger:el,start:'top 88%',once:true}});
+    el.style.transitionDelay=(el.dataset.delay||0)+'s';
+    revealIO.observe(el);
   });
-  $$('.k-line').forEach(l=>{
-    gsap.set(l,{scaleX:0,transformOrigin:'left'});
-    gsap.to(l,{scaleX:1,duration:1.1,ease:'power3.out',
-      scrollTrigger:{trigger:l,start:'top 92%',once:true}});
-  });
-  $$('[data-parallax]').forEach(el=>{
-    const s=parseFloat(el.dataset.parallax)||1;
-    gsap.to(el,{y:-70*s,ease:'none',
-      scrollTrigger:{trigger:el.closest('section,header')||el,start:'top top',end:'bottom top',scrub:true}});
-  });
-  gsap.to('.tl-progress',{scaleY:1,ease:'none',
-    scrollTrigger:{trigger:'.timeline',start:'top 70%',end:'bottom 62%',scrub:.5}});
-  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>ScrollTrigger.refresh());
 }
 const nodeIO=new IntersectionObserver(es=>es.forEach(e=>e.target.classList.toggle('on',e.isIntersecting)),{threshold:.35});
  $$('.tl-item').forEach(i=>nodeIO.observe(i));
+
+/* ---------- vanilla timeline scrub (replaces GSAP scrub) ---------- */
+const timelineEl=$('.timeline');
+if(timelineEl&&!REDUCED){
+  let tlTick=false;
+  const tlUpd=()=>{
+    tlTick=false;
+    const r=timelineEl.getBoundingClientRect();
+    const total=r.height+innerHeight*.08;
+    const passed=innerHeight*.70-r.top;
+    const p=Math.max(0,Math.min(1,passed/Math.max(total,1)));
+    const bar=$('.tl-progress',timelineEl);
+    if(bar)bar.style.transform='scaleY('+p.toFixed(4)+')';
+  };
+  addEventListener('scroll',()=>{if(!tlTick){tlTick=true;requestAnimationFrame(tlUpd);}},{passive:true});
+  tlUpd();
+}
+
+/* ---------- vanilla hero parallax (replaces GSAP scrub) ---------- */
+if(!REDUCED){
+  $$('[data-parallax]').forEach(el=>{
+    const s=parseFloat(el.dataset.parallax)||1;
+    const sec=el.closest('section,header')||el;
+    let pTick=false;
+    const pUpd=()=>{
+      pTick=false;
+      const r=sec.getBoundingClientRect();
+      const p=Math.max(0,Math.min(1,-r.top/Math.max(r.height,1)));
+      el.style.transform='translateY('+(-70*s*p).toFixed(1)+'px)';
+    };
+    addEventListener('scroll',()=>{if(!pTick){pTick=true;requestAnimationFrame(pUpd);}},{passive:true});
+    pUpd();
+  });
+}
 
 /* ---------- 3D tilt ---------- */
 function makeTilt(el,max=4){
@@ -1607,13 +1696,12 @@ function openModal(card){
     '<h3 class="modal-title">'+card.dataset.title+'</h3>'+
     (mock?'<div class="modal-mock">'+mock.outerHTML+'</div>':'')+
     '<p class="modal-overview">'+card.dataset.overview+'</p>'+
-    '<ul class="modal-highlights">'+card.dataset.highlights.split('|').map(h=>'<li><i data-lucide="check"></i><span>'+h+'</span></li>').join('')+'</ul>'+
+    '<ul class="modal-highlights">'+card.dataset.highlights.split('|').map(h=>'<li><svg class="lucide" aria-hidden="true"><use href="#i-check"/></svg><span>'+h+'</span></li>').join('')+'</ul>'+
     (tags?'<div class="p-tags">'+tags.innerHTML+'</div>':'')+
     '<div class="modal-actions">'+
-      '<a class="btn btn-solid btn-sm" href="'+card.dataset.gh+'" target="_blank" rel="noopener noreferrer"><i data-lucide="github"></i>View on GitHub</a>'+
-      '<button class="btn btn-ghost btn-sm" data-close><i data-lucide="x"></i>Close</button>'+
+      '<a class="btn btn-solid btn-sm" href="'+card.dataset.gh+'" target="_blank" rel="noopener noreferrer"><svg class="lucide" aria-hidden="true"><use href="#i-github"/></svg>View on GitHub</a>'+
+      '<button class="btn btn-ghost btn-sm" data-close><svg class="lucide" aria-hidden="true"><use href="#i-x"/></svg>Close</button>'+
     '</div>';
-  lucide.createIcons();
   initCyclers(modalBody);
   modal.classList.add('open');
   modal.setAttribute('aria-hidden','false');
@@ -1643,7 +1731,7 @@ if(modal){
   addEventListener('keydown',e=>{if(e.key==='Escape'){closeModal();closeMenu();}});
 }
 
-/* ---------- resume PDF ---------- */
+/* ---------- resume PDF (optional jsPDF — clear message if unavailable) ---------- */
 function downloadResume(){
   try{
     if(!window.jspdf||!window.jspdf.jsPDF){toast('PDF engine not loaded','x');return;}
@@ -1812,8 +1900,8 @@ function addUser(t){
 }
 function addAI(text,instant){
   const d=document.createElement('div');d.className='msg ai';
-  d.innerHTML='<div class="ai-av"><i data-lucide="sparkles"></i></div><div class="ai-body"></div>';
-  chatLog.appendChild(d);lucide.createIcons();
+  d.innerHTML='<div class="ai-av"><svg class="lucide" aria-hidden="true"><use href="#i-sparkles"/></svg></div><div class="ai-body"></div>';
+  chatLog.appendChild(d);
   const body=d.querySelector('.ai-body');
   const lines=text.split('\n');
   if(instant){body.innerHTML=lines.map(lineHTML).join('');scrollLog();return Promise.resolve();}
@@ -1834,8 +1922,8 @@ async function send(q){
   await wait(300);
   const t=document.createElement('div');
   t.className='msg ai';t.id='typingMsg';
-  t.innerHTML='<div class="ai-av"><i data-lucide="sparkles"></i></div><div class="ai-body"><div class="typing"><i></i><i></i><i></i></div></div>';
-  chatLog.appendChild(t);lucide.createIcons();scrollLog();
+  t.innerHTML='<div class="ai-av"><svg class="lucide" aria-hidden="true"><use href="#i-sparkles"/></svg></div><div class="ai-body"><div class="typing"><i></i><i></i><i></i></div></div>';
+  chatLog.appendChild(t);scrollLog();
   await wait(700+Math.random()*500);
   const ty=$('#typingMsg');ty&&ty.remove();
   await addAI(bestAnswer(q));
